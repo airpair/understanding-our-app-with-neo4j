@@ -34,7 +34,7 @@ To understand this let's define some (not all!) event groups which can happen ac
 A user is using our client app, and for the interaction with the server it calls the server's API (REST, SOAP, TCP, Websocket etc.). We can build a graph based on these events. Even when the API design is stateless we can assume the state of the client application as we created it (or we can have some kind of mapping mechanism).
 
 #### System run events
-Here belong all kinds of events happening in our system. Good events which are expected to happen because they are part of the application's functionality, bad events like errors, but also low level events like memory allocation. The level of abstraction depends on us. It feels like I am talking about the log level right? :)
+All kinds of events happening in our system. Good events which are expected to happen because they are part of the application's functionality, bad events like errors, but also low level events like memory allocation. The level of abstraction depends on us. It feels like I am talking about the log level right? :)
 
 #### Application lifecycle events
 Events like deploying, instantiating, destroying or even load balancing across the application.
