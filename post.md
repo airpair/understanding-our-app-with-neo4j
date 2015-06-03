@@ -190,9 +190,9 @@ Let's assume the following scenario:
 "We deploy version v111 of our application successfully, but cannot startup. Then we fix the build and do this again with version v112. Now it starts up and runs. A user connects, looks around, registers, logs in, explores, picks some items, checks out, pays. Another connects, starts exploring. We turn on a feature. One of the users searches and we get an error. We turn off the feature. A new user connects."
 
 Let's execute the Cypher queries reflecting this scenario and see what graph we get in our Neo4j instance!
-
 First the part where we deploy v111 of our app and get a STARTING_ERROR. The graph looks like this:
-![Alt STARTING_ERROR](http://i61.tinypic.com/3588ex2.jpg)
+##### **Check it live: http://console.neo4j.org/r/n6le6v**
+<center>![Alt STARTING_ERROR](https://openmerchantaccount.com/img/STARTING_ERROR.JPG)</center>
 
 Then we deploy and run a new version (v112) successfully, which means we grow a new graph from the START_NODE node.
 ![Alt RUNNING](http://i60.tinypic.com/2pydedh.jpg)
