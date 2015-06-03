@@ -51,118 +51,118 @@ Let's define the events first. We won't list all of them, but these should be en
 #### The application lifecycle stage nodes
 <table style="display:block; max-width:600px">
     <tr>
-        <td style="padding: 30px;"> Name </td>
-        <td>Properties</td>
-        <td>Description</tdv
+        <td style="padding: 12px 30px"> Name </td>
+        <td style="padding: 12px 30px">Properties</td>
+        <td style="padding: 12px 30px">Description</tdv
     </tr>
     <tr>
-        <td  style="padding: 30px;"> START_NODE </td>
-        <td></td>
-        <td>The start NODE of our application</tdv
+        <td style="padding: 12px 30px"> START_NODE </td>
+        <td style="padding: 12px 30px"></td>
+        <td style="padding: 12px 30px">The start NODE of our application</tdv
     </tr>
     <tr>
-        <td  style="padding: 30px;"> DEPLOYING </td>
-        <td>timestamp, version, ticket</td>
-        <td>When we are in a deploying process.</td>
+        <td style="padding: 12px 30px"> DEPLOYING </td>
+        <td style="padding: 12px 30px">timestamp, version, ticket</td>
+        <td style="padding: 12px 30px">When we are in a deploying process.</td>
     </tr>
     <tr>
-        <td  style="padding: 30px;"> DEPLOYMENT_ERROR </td>
-        <td>timestamp, message</td>
-        <td>On error during deploying.</td>
+        <td style="padding: 12px 30px"> DEPLOYMENT_ERROR </td>
+        <td style="padding: 12px 30px">timestamp, message</td>
+        <td style="padding: 12px 30px">On error during deploying.</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> DEPLOYED </td>
-        <td>timestamp</td>
-        <td>On successfull deploy.</td>
+        <td style="padding: 12px 30px"> DEPLOYED </td>
+        <td style="padding: 12px 30px">timestamp</td>
+        <td style="padding: 12px 30px">On successfull deploy.</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> STARTING_ERROR </td>
-        <td>timestamp, message</td>
-        <td>On error in startup. </td>
+        <td style="padding: 12px 30px"> STARTING_ERROR </td>
+        <td style="padding: 12px 30px">timestamp, message</td>
+        <td style="padding: 12px 30px">On error in startup. </td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> RUNNING </td>
-        <td>timestamp</td>
-        <td>On successful startup.</td>
+        <td style="padding: 12px 30px"> RUNNING </td>
+        <td style="padding: 12px 30px">timestamp</td>
+        <td style="padding: 12px 30px">On successful startup.</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> RUNTIME_ERROR </td>
-        <td>timestamp, message</td>
-        <td>On successful startup.</td>
+        <td style="padding: 12px 30px"> RUNTIME_ERROR </td>
+        <td style="padding: 12px 30px">timestamp, message</td>
+        <td style="padding: 12px 30px">On successful startup.</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> STOPPED </td>
-        <td>timestamp</td>
-        <td>On stop.</td>
+        <td style="padding: 12px 30px"> STOPPED </td>
+        <td style="padding: 12px 30px">timestamp</td>
+        <td style="padding: 12px 30px">On stop.</td>
     </tr>
 </table>
 
 #### The user event nodes
 <table style="display:block; max-width:600px">
     <tr>
-        <td style="padding: 30px;"> Name </td>
-        <td>Properties</td>
+        <td style="padding: 12px 30px"> Name </td>
+        <td style="padding: 12px 30px">Properties</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> USER_SESSION </td>
-        <td>timestamp, session_id</td>
+        <td style="padding: 12px 30px"> USER_SESSION </td>
+        <td style="padding: 12px 30px">timestamp, session_id</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> USER_REGISTER </td>
-        <td>timestamp, username</td>
+        <td style="padding: 12px 30px"> USER_REGISTER </td>
+        <td style="padding: 12px 30px">timestamp, username</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> USER_LOGIN </td>
-        <td>timestamp, username</td>
+        <td style="padding: 12px 30px"> USER_LOGIN </td>
+        <td style="padding: 12px 30px">timestamp, username</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> USER_SEARCH </td>
-        <td>timestamp</td>
+        <td style="padding: 12px 30px"> USER_SEARCH </td>
+        <td style="padding: 12px 30px">timestamp</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> USER_PICK </td>
-        <td>timestamp</td>
+        <td style="padding: 12px 30px"> USER_PICK </td>
+        <td style="padding: 12px 30px">timestamp</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> USER_CHECKOUT </td>
-        <td>timestamp</td>
+        <td style="padding: 12px 30px"> USER_CHECKOUT </td>
+        <td style="padding: 12px 30px">timestamp</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> USER_PAY </td>
-        <td>timestamp</td>
+        <td style="padding: 12px 30px"> USER_PAY </td>
+        <td style="padding: 12px 30px">timestamp</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> USER_LOGOUT </td>
-        <td>timestamp</td>
+        <td style="padding: 12px 30px"> USER_LOGOUT </td>
+        <td style="padding: 12px 30px">timestamp</td>
     </tr>
 </table>
 
 #### Some imaginary system runtime event nodes
 <table style="display:block; max-width:600px">
     <tr>
-        <td style="padding: 30px;"> Name </td>
-        <td>Properties</td>
-        <td>Description</tdv
+        <td style="padding: 12px 30px"> Name </td>
+        <td style="padding: 12px 30px">Properties</td>
+        <td style="padding: 12px 30px">Description</tdv
     </tr>
     <tr>
-        <td style="padding: 30px;"> FEATURE_SWITCH </td>
-        <td>timestamp, ticket</td>
-        <td>On switching feature. Ticket id added for further info.</tdv
+        <td style="padding: 12px 30px"> FEATURE_SWITCH </td>
+        <td style="padding: 12px 30px">timestamp, ticket</td>
+        <td style="padding: 12px 30px">On switching feature. Ticket id added for further info.</tdv
     </tr>
     <tr>
-        <td style="padding: 30px;"> LOAD_ALERT </td>
-        <td>timestamp, message</td>
-        <td>Some kind of load alert sent to the alerting component.</td>
+        <td style="padding: 12px 30px"> LOAD_ALERT </td>
+        <td style="padding: 12px 30px">timestamp, message</td>
+        <td style="padding: 12px 30px">Some kind of load alert sent to the alerting component.</td>
     </tr>
     <tr>
-        <td style="padding: 30px;"> OUT_OF_STOCK </td>
-        <td>timestamp, item_id</td>
-        <td>When an item is out of stock.</tdv
+        <td style="padding: 12px 30px"> OUT_OF_STOCK </td>
+        <td style="padding: 12px 30px">timestamp, item_id</td>
+        <td style="padding: 12px 30px">When an item is out of stock.</tdv
     </tr>
     <tr>
-        <td style="padding: 30px;"> SCHEDULED_REPORT </td>
-        <td>timestamp, report_type, report_id</td>
-        <td>A scheduled task happening sometimes.</tdv
+        <td style="padding: 12px 30px"> SCHEDULED_REPORT </td>
+        <td style="padding: 12px 30px">timestamp, report_type, report_id</td>
+        <td style="padding: 12px 30px">A scheduled task happening sometimes.</tdv
     </tr>
 </table>
 
