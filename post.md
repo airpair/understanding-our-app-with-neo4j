@@ -45,145 +45,156 @@ The powerful [Neo4j](http://neo4j.com/) database is perfect for this. Let's see 
 
 ### Building yet another food ordering application
 
-Neo4j has a query language called [Cypher](http://neo4j.com/developer/cypher-query-language/). Its usage is very intuitive and for our experiment we need just a running Neo4j instance and our Cypher queries.
+Let's define the events first. We won't list all of them, but these should be enough. We will add some minimalistic list of properties which our event nodes would contain.
 
-So I have my [Neo4j Community](http://neo4j.com/download/) instance running.
 
-Let's define our Cypher queries.
-
-##### First the application lifecycle stage nodes
+#### The application lifecycle stage nodes
 <table style="display:block; max-width:600px">
     <tr>
         <td style="padding: 30px;"> Name </td>
-        <td>Cypher query</td>
+        <td>Properties</td>
         <td>Description</tdv
     </tr>
     <tr>
-        <td  style="padding: 30px;"> ACTUAL </td>
-        <td>CREATE (stage:LifecycleStage {name:'ACTUAL'})</td>
-        <td>Connected to the actual state always.</tdv
-    </tr>
-    <tr>
-        <td  style="padding: 30px;"> STARTLINE </td>
-        <td>CREATE (stage:LifecycleStage {name:'STARTLINE', timestamp: 'x'})</td>
+        <td  style="padding: 30px;"> START_NODE </td>
+        <td></td>
         <td>The start NODE of our application</tdv
     </tr>
     <tr>
         <td  style="padding: 30px;"> DEPLOYING </td>
-        <td>CREATE (stage:LifecycleStage {name:'DEPLOYING', timestamp: 'x', version:'x'})</td>
+        <td>timestamp, version, ticket</td>
         <td>When we are in a deploying process.</td>
     </tr>
     <tr>
         <td  style="padding: 30px;"> DEPLOYMENT_ERROR </td>
-        <td>CREATE (stage:LifecycleStage {name:'DEPLOYMENT_ERROR', timestamp: 'x', version:'x'})</td>
+        <td>timestamp, message</td>
         <td>On error during deploying.</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> DEPLOYED </td>
-        <td>CREATE (stage:LifecycleStage {name:'DEPLOYED', timestamp: 'x', version:'x'})</td>
+        <td>timestamp</td>
         <td>On successfull deploy.</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> STARTING_ERROR </td>
-        <td>CREATE (stage:LifecycleStage {name:'STARTING_ERROR', timestamp: 'x', version:'x'})</td>
+        <td>timestamp, message</td>
         <td>On error in startup. </td>
     </tr>
     <tr>
         <td style="padding: 30px;"> RUNNING </td>
-        <td>CREATE (stage:LifecycleStage {name:'RUNNING', timestamp: 'x', version:'x'})</td>
+        <td>timestamp</td>
+        <td>On successful startup.</td>
+    </tr>
+    <tr>
+        <td style="padding: 30px;"> RUNTIME_ERROR </td>
+        <td>timestamp, message</td>
         <td>On successful startup.</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> STOPPED </td>
-        <td>CREATE (stage:LifecycleStage {name:'STOPPED', timestamp: 'x', version:'x'})</td>
+        <td>timestamp</td>
         <td>On stop.</td>
     </tr>
 </table>
 
-##### The user event nodes
-
+#### The user event nodes
 <table style="display:block; max-width:600px">
     <tr>
         <td style="padding: 30px;"> Name </td>
-        <td>Cypher query</td>
+        <td>Properties</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> USER_SESSION </td>
-        <td>CREATE (ue:UserEvent {name:'USER_SESSION', timestamp: 'x', sessionID:'id'})</td>
+        <td>timestamp, session_id</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> USER_REGISTER </td>
-        <td>CREATE (ue:UserEvent {name:'USER_REGISTER', timestamp: 'x', username:'u'})</td>
+        <td>timestamp, username</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> USER_LOGIN </td>
-        <td>CREATE (ue:UserEvent {name:'USER_LOGIN', timestamp: 'x', username:'u'})</td>
+        <td>timestamp, username</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> USER_SEARCH </td>
-        <td>CREATE (ue:UserEvent {name:'USER_SEARCH', timestamp: 'x', username:'u'})</td>
+        <td>timestamp</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> USER_PICK </td>
-        <td>CREATE (ue:UserEvent {name:'USER_PICK', timestamp: 'x', username:'u'})</td>
+        <td>timestamp</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> USER_CHECKOUT </td>
-        <td>CREATE (ue:UserEvent {name:'USER_CHECKOUT', timestamp: 'x', username:'u'})</td>
+        <td>timestamp</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> USER_PAY </td>
-        <td>CREATE (ue:UserEvent {name:'USER_PAY', timestamp: 'x', username:'u'})</td>
+        <td>timestamp</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> USER_LOGOUT </td>
-        <td>CREATE (ue:UserEvent {name:'USER_LOGOUT', timestamp: 'x', username:'u'})</td>
+        <td>timestamp</td>
     </tr>
 </table>
 
-##### Some imaginary system runtime event nodes
+#### Some imaginary system runtime event nodes
 <table style="display:block; max-width:600px">
     <tr>
         <td style="padding: 30px;"> Name </td>
-        <td>Cypher query</td>
+        <td>Properties</td>
         <td>Description</tdv
     </tr>
-    
     <tr>
         <td style="padding: 30px;"> FEATURE_SWITCH </td>
-        <td>CREATE (re:RuntimeEvent {name:'FEATURE_SWITCH', timestamp: 'x', reason:'', ticketID:''})</td>
-        <td>On switching feature.</tdv
+        <td>timestamp, ticket</td>
+        <td>On switching feature. Ticket id added for further info.</tdv
     </tr>
     <tr>
         <td style="padding: 30px;"> LOAD_ALERT </td>
-        <td>CREATE (re:RuntimeEvent {name:'LOAD_ALERT', timestamp: 'x', message:''})</td>
+        <td>timestamp, message</td>
         <td>Some kind of load alert sent to the alerting component.</td>
     </tr>
     <tr>
         <td style="padding: 30px;"> OUT_OF_STOCK </td>
-        <td>CREATE (re:RuntimeEvent {name:'OUT_OF_STOCK', timestamp: 'x', itemID:'x'})</td>
+        <td>timestamp, item_id</td>
         <td>When an item is out of stock.</tdv
     </tr>
     <tr>
         <td style="padding: 30px;"> SCHEDULED_REPORT </td>
-        <td>CREATE (re:RuntimeEvent {name:'SCHEDULED_REPORT', timestamp: 'x', reportType:'x'})</td>
+        <td>timestamp, report_type, report_id</td>
         <td>A scheduled task happening sometimes.</tdv
     </tr>
-    
 </table>
 
-As you see, almost all events have a timestamp. The lifecycle events have a version as well, users have username. These are the most basic properties.
+Now let's jump into world of Neo4j and Cypher.
 
-Let's assume this scenario:
+### Neo4j and Cypher
 
-"We deploy version v111 of our application successfully, but cannot startup. Then we fix the build and do this again with version v112. Now it starts up and runs. A user connects, looks around, registers, logs in, explores, picks some items, checks out, pays. We turn on a feature. The user searches and we get an error. We turn off the feature. A new user connects."
+Neo4j has a query language called [Cypher](http://neo4j.com/developer/cypher-query-language/). Its usage is very intuitive and for our experiment we need just a running Neo4j instance and our Cypher queries.
+
+In real life we would use a real [Neo4j](http://neo4j.com/download/) instance, but there is a super cool online [Neo4j console](http://console.neo4j.org/) which we can use to do our Cypher queries and share the database!
+
+To get our feet wet, let's see how we create a new lifecycle stage node using Cypher.
+```
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:Lifec
+DELETE pointer
+CREATE (stage)-[:NEXT]->(nextStage:LifecycleStage {name:'STAGENAME', timestamp: '123', version:'v111'})
+CREATE (current)-[:IS_CURRENT_LIFECYCLE]-> (nextStage);
+```
+We will use a pointer which points always to the latest stage so we have to repoint and add a new node to our event graph. These queries would be wrapped into transactions of course as Neo4j [supports them](http://neo4j.com/docs/stable/transactions.html) on node and relation level. 
+
+### Now the story!
+
+Let's assume the following scenario:
+
+"We deploy version v111 of our application successfully, but cannot startup. Then we fix the build and do this again with version v112. Now it starts up and runs. A user connects, looks around, registers, logs in, explores, picks some items, checks out, pays. Another connects, starts exploring. We turn on a feature. One of the users searches and we get an error. We turn off the feature. A new user connects."
 
 Let's execute the Cypher queries reflecting this scenario and see what graph we get in our Neo4j instance!
 
 First the part where we deploy v111 of our app and get a STARTING_ERROR. The graph looks like this:
 ![Alt STARTING_ERROR](http://i61.tinypic.com/3588ex2.jpg)
 
-Then we deploy and run a new version (v112) successfully, which means we grow a new graph from the STARTLINE node.
+Then we deploy and run a new version (v112) successfully, which means we grow a new graph from the START_NODE node.
 ![Alt RUNNING](http://i60.tinypic.com/2pydedh.jpg)
 
 A user connects and interacts.
