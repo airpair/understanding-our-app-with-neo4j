@@ -3,20 +3,20 @@
 In the world of IT, several roles impact an application's lifecycle. The product roles (product manager, chief, sales, project manager etc), the creator (developer, QA, UX etc), infrastructure roles and any mixture of these. 
 These roles all require understanding what is going on in the application but they are all interested in a different or overlapping aspect.
 
-In a product point of view we might be interested how the users are using our product, in sales point of view we will want to see what are they paying for, in developer point of view we would be probably more interested what happens in the system.
+From a product point of view we might be interested how the users are using our product, from sales point of view we will want to see what are they paying for, for developer point of view we would be probably more interested what happens in the system.
 
-We also want to learn from the previous states, and know exactly what is the current state.
+We also want to find a connection between application behaviour, user behaviour and infrastructure behaviour because a change in any of these impacts the others.
 
 ### Understanding our users
 
-To be more concrete let's assume our product has a UI which talks through an API to our server. If this is a web application or an app, and we are talking about understanding users, we probably end up including some analytics like Google Analytics or mouse click trackers. That works great, but how do we map this information to the state we have in our server or to a specific deployment version we have? We create some mechanism designed for that. A tool.
+To be more concrete let's assume our product has a UI which talks through an API to our server. If this is a web application or an app, and we are talking about understanding users, we probably end up including some analytics like Google Analytics or mouse click trackers. That works great, but how do we map this information to the state we have in our server or to a specific deployment version we have? We create some mechanism designed for that, a tool, or if we don't do that we usually just check it in our version control system.
 
 ### Understanding our system across iterations
 
 We have our current system. How do we check what happened 5 days ago? We probably go to our logs or the manager system sitting on top of it and filter out what we need. 
-How do we know how many active users do we have currently and what are they doing? We probably check that in our database, session storage, or we send a push message to get some response. How do we check how many users tried out a feature we turned on two months ago in a specific hotfix deployment? We go to our logs again, or to the aggregation manager designed for this. 
+How do we know how many active users do we have currently and what are they doing? We probably check that in our database, session storage, or we send a push message to get some response. How do we check how many users tried out a feature which was turned on two months ago between 1PM and 2PM in a specific hotfix deployment? We probably go to our logs again, or to the aggregation manager designed for this, then we map it to our version controlled configuration and we also do a query in our database.
 
-Lots of tools, tool managers, painful solutions sometimes and don't forget how many people you have to involve to answer these questions.
+Lots of tools, tool managers, painful solutions sometimes and don't forget how many people you need to involve to answer these questions.
 
 ## The idea
 
@@ -24,7 +24,7 @@ The set of possible states of an application is a graph.
 When a set of events happens in our system there is an indicator, that creates a graph.
 When a user travels across our application it creates a graph with its path.
 
-Lets put all these graphs into one place! And here comes the key. Let's connect these graphs! 
+Let's put all these graphs into one place! And here comes the key. Let's connect these graphs! 
 
 ### How?
 
@@ -34,14 +34,14 @@ To understand this let's define some (not all!) event groups which can happen ac
 A user is using our client app, and for the interaction with the server it calls the server's API (REST, SOAP, TCP, Websocket etc.). We can build a graph based on these events. Even when the API design is stateless we can assume the state of the client application as we created it (or we can have some kind of mapping mechanism).
 
 #### System run events
-All kinds of events happening in our system. Good events which are expected to happen because they are part of the application's functionality, bad events like errors, but also low level events like memory allocation. The level of abstraction depends on us. It feels like I am talking about the log level right? :)
+All kinds of events happening in our system belong here. Expected events because they are part of the application's functionality, unexpected events like errors, but also low level events like memory allocation. The level of abstraction depends on us. It feels like I am talking about the log level right? :)
 
 #### Application lifecycle events
 Events like deploying, instantiating, destroying or even load balancing across the application.
 
 So we are focusing on these event groups and the possible graph model they form. We will want to store these graphs and do queries on them. 
 
-The powerful [Neo4j](http://neo4j.com/) database is perfect for this. Lets see an example!
+The powerful [Neo4j](http://neo4j.com/) database is perfect for this. Let's see an example!
 
 ### Building yet another food ordering application
 
