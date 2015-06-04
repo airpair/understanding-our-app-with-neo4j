@@ -194,8 +194,9 @@ First the part where we deploy v111 of our app and get a STARTING_ERROR. The gra
 ##### **Check it live: http://console.neo4j.org/r/4i9sh9**
 <center>![Alt STARTING_ERROR](https://openmerchantaccount.com/img/starting_error.png)</center>
 
+##### **Check it live: http://console.neo4j.org/?id=x58zsl**
 Then we deploy and run a new version (v112) successfully, which means we grow a new graph from the START_NODE node.
-![Alt RUNNING](http://i60.tinypic.com/2pydedh.jpg)
+![Alt RUNNING](https://openmerchantaccount.com/img/RUNNING.png)
 
 A user connects and interacts.
 ![Alt User interacts](http://i57.tinypic.com/oaupog.jpg)
