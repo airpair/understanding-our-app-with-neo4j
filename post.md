@@ -191,15 +191,16 @@ Let's assume the following scenario:
 
 Let's execute the Cypher queries reflecting this scenario and see what graph we get in our Neo4j instance!
 First the part where we deploy v111 of our app and get a STARTING_ERROR. The graph looks like this:
-##### **Check it live: http://console.neo4j.org/r/4i9sh9**
+##### **Check it live: http://console.neo4j.org/r/6618ts**
 <center>![Alt STARTING_ERROR](https://openmerchantaccount.com/img/starting_error.png)</center>
 
-##### **Check it live: http://console.neo4j.org/?id=x58zsl**
 Then we deploy and run a new version (v112) successfully, which means we grow a new graph from the START_NODE node.
+##### **Check it live: http://console.neo4j.org/?id=nkeg43**
 ![Alt RUNNING](https://openmerchantaccount.com/img/RUNNING.png)
 
 A user connects and interacts.
-![Alt User interacts](http://i57.tinypic.com/oaupog.jpg)
+##### **Check it live: http://console.neo4j.org/r/ylzlvy**
+![Alt User interacts](https://openmerchantaccount.com/img/USER_INTERACTS.png)
 
 We turn on a feature.
 ![Alt 1st feature](http://i57.tinypic.com/2ii7t5v.jpg)
