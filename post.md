@@ -220,13 +220,15 @@ User(3) connects.
 
 ## Let's review what we got
 
-This is just a rough idea, but by looking to the resulting graph, we see clearly if a feature switching impacts a user, and when.
+This is just a rough example, but by looking to the resulting graph, we see clearly if a feature switching impacts a user, and when.
 
 By going through each user's steps we can understand how they are using our application and we can also easily check what items they are interested in, so we can apply some recommendation algorithms.
 
 By following the connection between the deployment and the user or feature switch, we can easily decide what was the version or what was the configuration at a particular time.
 
 By checking the timestamps we can easily measure the latencies relevant to us.
+
+The best part is, that all this can be done using Cypher queries.
 
 ## Next steps
 I don't really see people logging their system and user events into graphs, but I think it is definitely worth doing further experiments in this field, as it can result great patterns and frameworks.
