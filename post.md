@@ -198,11 +198,11 @@ Then we deploy and run a new version (v112) successfully, which means we grow a 
 ##### **Check it live: http://console.neo4j.org/?id=nkeg43**
 ![Alt RUNNING](https://openmerchantaccount.com/img/RUNNING.png)
 
-A user connects and interacts.
+A user(1) connects and interacts.
 ##### **Check it live: http://console.neo4j.org/r/ylzlvy**
 ![Alt User interacts](https://openmerchantaccount.com/img/USER_INTERACTS.png)
 
-Another user connects and starts searching.
+Another user(2) connects and starts searching.
 ##### **Check it live: http://console.neo4j.org/r/4wtim4**
 ![Alt New user searches](https://openmerchantaccount.com/img/ID2_USER_SEARCH.png)
 
@@ -210,9 +210,13 @@ We turn on a feature.
 ##### **Check it live: http://console.neo4j.org/r/vjuish**
 ![Alt We turn on feature](https://openmerchantaccount.com/img/FEATURE_ON.png)
 
-User with id1 searches then we turn off a feature.
+User(1) searches for something then we turn off a feature.
 ##### **Check it live: http://console.neo4j.org/r/26iiqj**
 ![Alt User1 search, feature turn off](https://openmerchantaccount.com/img/FEATURE_OFF.png)
+
+User(3) connects.
+##### **Check it live: http://console.neo4j.org/r/gqddar**
+![Alt User3 connects](https://openmerchantaccount.com/img/user3_connect.png)
 
 ## Let's review what we got
 
