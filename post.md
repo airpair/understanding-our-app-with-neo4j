@@ -187,7 +187,7 @@ We will use a pointer which points always to the latest stage so we have to repo
 
 Let's assume the following scenario:
 
-"We deploy version v111 of our application successfully, but cannot startup. Then we fix the build and do this again with version v112. Now it starts up and runs. A user connects, looks around, registers, logs in, explores, picks some items, checks out, pays. Another connects, starts exploring. We turn on a feature. One of the users searches and we get an error. We turn off the feature. A new user connects."
+"We deploy version v111 of our application successfully, but cannot startup. Then we fix the build and do this again with version v112. Now it starts up and runs. A user connects, looks around, registers, logs in, explores, picks some items, checks out, pays. Another connects, starts exploring. We turn on a feature. One of the users searches. We turn off the feature. A new user connects."
 
 Let's execute the Cypher queries reflecting this scenario and see what graph we get in our Neo4j instance!
 First the part where we deploy v111 of our app and get a STARTING_ERROR. The graph looks like this:
@@ -202,11 +202,17 @@ A user connects and interacts.
 ##### **Check it live: http://console.neo4j.org/r/ylzlvy**
 ![Alt User interacts](https://openmerchantaccount.com/img/USER_INTERACTS.png)
 
-We turn on a feature.
-![Alt 1st feature](http://i57.tinypic.com/2ii7t5v.jpg)
+Another user connects and starts searching.
+##### **Check it live: http://console.neo4j.org/r/4wtim4**
+![Alt New user searches](https://openmerchantaccount.com/img/ID2_USER_SEARCH.png)
 
-User searches and we turn off a feature, a new user connects.
-![Alt 1st feature](http://i61.tinypic.com/ng1z5l.jpg)
+We turn on a feature.
+##### **Check it live: http://console.neo4j.org/r/vjuish**
+![Alt We turn on feature](https://openmerchantaccount.com/img/FEATURE_ON.png)
+
+User with id1 searches then we turn off a feature.
+##### **Check it live: http://console.neo4j.org/r/26iiqj**
+![Alt User1 search, feature turn off](https://openmerchantaccount.com/img/FEATURE_OFF.png)
 
 ## Let's review what we got
 
