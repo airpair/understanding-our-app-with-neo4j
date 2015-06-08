@@ -228,10 +228,10 @@ By following the connection between the deployment and the user or feature switc
 
 By checking the timestamps we can easily measure the latencies relevant to us.
 
-The best part is, that all this can be done using Cypher queries.
+All this can be done using simple Cypher queries.
 
 ## Next steps
-I don't really see people logging their system and user events into graphs, but I think it is definitely worth doing further experiments in this field, as it can result great patterns and frameworks.
+I don't really see people logging their system and user events into graphs, but I think it is definitely worth doing further experiments in this field as it can result great patterns and frameworks.
 
 ## Additional notes
 
