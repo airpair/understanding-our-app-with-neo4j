@@ -1,9 +1,10 @@
 ## Motivation
 
-You have a food ordering application. Your system is logging almost everything, your source code and configuration is version controlled. What do you need to do to answer the following questions?
+You have a food ordering application. Your system is logging almost everything, your source code and configuration is version controlled. Somebody comes to you and says:
 
 "We turned on a feature at 2PM five days ago, then we turned it off at 3PM. What was the actual configuration? How many users were impacted? What was the application version? How many of these users like to search for a phrase 'apple'? What do they like to buy? Can we recommend something for them?"
 
+What do you need to do to answer these questions?<br>
 If you are motivated enough, jump to [the idea](#the-idea) :)
 
 **Visioning, developing, building, deploying, waiting, iterating**
@@ -54,35 +55,36 @@ The powerful [Neo4j](http://neo4j.com/) database is perfect for this. Let's see 
 ### Building yet another food ordering application
 
 Let's define the events first. We won't list all of them, but these should be enough. We will add some minimalistic list of properties which our event nodes would contain.
+
 **Application lifecycle stage nodes**
 <ui>
-  <li>START_NODE</li>
-  <li>DEPLOYING (timestamp, version, ticket)</li>
-  <li>DEPLOYMENT_ERROR (timestamp, message)</li>
-  <li>STARTING_ERROR (timestamp, message)</li>
-  <li>RUNNING (timestamp)</li>
-  <li>RUNTIME_ERROR (timestamp, message)</li>
-  <li>STOPPED (timestamp, message)</li>
+  <li style="padding-left:30px">START_NODE</li>
+  <li style="padding-left:30px">DEPLOYING (timestamp, version, ticket)</li>
+  <li style="padding-left:30px">DEPLOYMENT_ERROR (timestamp, message)</li>
+  <li style="padding-left:30px">STARTING_ERROR (timestamp, message)</li>
+  <li style="padding-left:30px">RUNNING (timestamp)</li>
+  <li style="padding-left:30px">RUNTIME_ERROR (timestamp, message)</li>
+  <li style="padding-left:30px">STOPPED (timestamp, message)</li>
 </ui>
 
 **The user event nodes**
 <ui>
-  <li>USER_SESSION (timestamp, session_id)</li>
-  <li>USER_REGISTER (timestamp, username)</li>
-  <li>USER_LOGIN (timestamp, username)</li>
-  <li>USER_SEARCH (timestamp)</li>
-  <li>USER_PICK (timestamp)</li>
-  <li>USER_CHECKOUT (timestamp)</li>
-  <li>USER_PAY (timestamp)</li>
-  <li>USER_LOGOUT (timestamp)</li>
+  <li style="padding-left:30px">USER_SESSION (timestamp, session_id)</li>
+  <li style="padding-left:30px">USER_REGISTER (timestamp, username)</li>
+  <li style="padding-left:30px">USER_LOGIN (timestamp, username)</li>
+  <li style="padding-left:30px">USER_SEARCH (timestamp)</li>
+  <li style="padding-left:30px">USER_PICK (timestamp)</li>
+  <li style="padding-left:30px">USER_CHECKOUT (timestamp)</li>
+  <li style="padding-left:30px">USER_PAY (timestamp)</li>
+  <li style="padding-left:30px">USER_LOGOUT (timestamp)</li>
 </ui>
 
 **Some imaginary system runtime event nodes**
 <ui>
-  <li>FEATURE_SWITCH (timestamp, ticket)</li>
-  <li>LOAD_ALERT (timestamp, message)</li>
-  <li>OUT_OF_STOCK (timestamp, item_id)</li>
-  <li>SCHEDULED_REPORT (timestamp, report_id)</li>
+  <li style="padding-left:30px">FEATURE_SWITCH (timestamp, ticket)</li>
+  <li style="padding-left:30px">LOAD_ALERT (timestamp, message)</li>
+  <li style="padding-left:30px">OUT_OF_STOCK (timestamp, item_id)</li>
+  <li style="padding-left:30px">SCHEDULED_REPORT (timestamp, report_id)</li>
 </ui>
 
 
