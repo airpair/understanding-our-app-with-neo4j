@@ -4,7 +4,7 @@ You have a food ordering application. Your system is logging almost everything, 
 
 "We turned on a feature at 2PM five days ago, then we turned it off at 3PM. What was the actual configuration? How many users were impacted? What was the application version? How many of these users like to search for a phrase 'apple'? What do they like to buy? Can we recommend something for them?"
 
-If you are motivated enough, jump to the idea :)
+If you are motivated enough, jump to [the idea](#the-idea) :)
 
 **Visioning, developing, building, deploying, waiting, iterating**
 
