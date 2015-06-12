@@ -291,6 +291,7 @@ CREATE (up:UserPointer{sessionID:'id3'})-[:IS_CURRENT_UE]->(ue);
 
 ## Let's review what we got
 
+![Alt Review](https://openmerchantaccount.com/img/user3_connect.png)
 This is just a rough example, but by looking to the [resulting graph](http://console.neo4j.org/?id=gqddar), we see clearly if a feature switching impacts a user, and when.
 
 Let's see who was impacted with turning on 'feature1'.
@@ -303,7 +304,9 @@ RETURN up.sessionID;
 
 //id2
 //id1
+//NO id3
 ```
+What would you have to do to get this information using your logs, config and databases? A lot more.
 
 By going through each user's steps we can understand how they are using our application and we can also easily check what items they are interested in, so we can apply some recommendation algorithms.
 
@@ -314,7 +317,7 @@ By checking the timestamps we can easily measure the latencies relevant to us.
 **All this can be done using simple Cypher queries!**
 
 ## Next steps
-I don't really see people logging their system and user events into graphs, but I think it is definitely worth doing further experiments in this field as it can result great patterns and frameworks.
+I think it is definitely worth doing further experiments with graph based tracking, logging as it can result great patterns and frameworks.
 
 **Thinking in aspects**
 
