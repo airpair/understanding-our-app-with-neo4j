@@ -136,7 +136,7 @@ Let's assume the following scenario:
 
 "We deploy version v111 of our application successfully, but cannot startup. Then we fix the build and do this again with version v112. Now it starts up and runs. A user connects, looks around, registers, logs in, explores, picks some items, checks out, pays. Another connects, starts exploring. We turn on a feature. One of the users searches. We turn off the feature. A new user connects."
 
-Let's execute the Cypher queries reflecting this scenario and see what graph we get in our Neo4j instance!<br> If you are just interested in the outcome check out [this graph](http://console.neo4j.org/?id=gqddar) and jump to the [review](#let-s-review-what-we-got).
+Let's execute the Cypher queries reflecting this scenario and see what graph we get in our Neo4j instance!<br> If you are just interested in the outcome check out the [review](#let-s-review-what-we-got).
 First the part where we deploy v111 of our app and get a STARTING_ERROR. 
 ```
 //We point to the START_NODE in the start of the world
@@ -291,7 +291,19 @@ CREATE (up:UserPointer{sessionID:'id3'})-[:IS_CURRENT_UE]->(ue);
 
 ## Let's review what we got
 
-This is just a rough example, but by looking to the resulting graph, we see clearly if a feature switching impacts a user, and when.
+This is just a rough example, but by looking to the [resulting graph](http://console.neo4j.org/?id=gqddar), we see clearly if a feature switching impacts a user, and when.
+
+Let's see who was impacted with turning on 'feature1'.
+```
+//Get UserEvent which was impacted by feature 'feature1' in 'v112' 
+MATCH (stage:LifecycleStage { name:'RUNNING', version:'v112' })<-[:RELATES_TO]-(fe:FeatureSwitch { featureName:'feature1', value:true })-[:WILL_IMPACT]->(user:UserEvent) 
+//Get the pointer which contains the sessionID or other property
+MATCH (up:UserPointer)-[:IS_CURRENT_UE]->(user_temp:UserEvent)<-[:NEXT*0..]-(user) 
+RETURN up.sessionID;
+
+//id2
+//id1
+```
 
 By going through each user's steps we can understand how they are using our application and we can also easily check what items they are interested in, so we can apply some recommendation algorithms.
 
