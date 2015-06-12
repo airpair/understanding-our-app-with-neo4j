@@ -109,6 +109,7 @@ A user event does something similar, the difference is that every UserPointer co
 ```
 MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
 CREATE (ue:UserEvent {name:'USER_SESSION', timestamp: timestamp(), sessionID:'id1'})-[:USER_OF]->(stage);
+
 MATCH (ue:UserEvent {sessionID:'id1'})
 CREATE (up:UserPointer{sessionID:'id1'})-[:IS_CURRENT_UE]->(ue);
 ```
@@ -117,9 +118,11 @@ A FeatureSwitch uses the same pattern, but a new FeatureSwitch is connected to t
 ```
 CREATE (fs:FeatureSwitch{name:'FEATURE_SWITCH', featureName:'feature1', value:true})
 CREATE (fp:FeaturePointer)-[:IS_CURRENT_FE]->(fs);
+
 MATCH (fsl:FeaturePointer)-[:IS_CURRENT_FE]->(fs:FeatureSwitch)
 MATCH (up:UserPointer)-[:IS_CURRENT_UE]->(ue:UserEvent)
 CREATE (fs)-[:WILL_IMPACT]->(ue);
+
 MATCH (fsl:FeaturePointer)-[:IS_CURRENT_FE]->(fs:FeatureSwitch)
 MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
 CREATE (fs)-[:RELATES_TO]->(stage);
@@ -133,34 +136,158 @@ Let's assume the following scenario:
 
 "We deploy version v111 of our application successfully, but cannot startup. Then we fix the build and do this again with version v112. Now it starts up and runs. A user connects, looks around, registers, logs in, explores, picks some items, checks out, pays. Another connects, starts exploring. We turn on a feature. One of the users searches. We turn off the feature. A new user connects."
 
-Let's execute the Cypher queries reflecting this scenario and see what graph we get in our Neo4j instance!
-First the part where we deploy v111 of our app and get a STARTING_ERROR. The graph looks like this:
+Let's execute the Cypher queries reflecting this scenario and see what graph we get in our Neo4j instance!<br> If you are just interested in the outcome check out [this graph](http://console.neo4j.org/?id=gqddar) and jump to the [review](#let-s-review-what-we-got).
+First the part where we deploy v111 of our app and get a STARTING_ERROR. 
+```
+//We point to the START_NODE in the start of the world
+CREATE (current:LifecyclePointer)-[:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage {name:'START_NODE', timestamp: timestamp()});
+
+//DEPLOYING
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+DELETE pointer
+CREATE (stage)-[:NEXT]->(nextStage:LifecycleStage {name:'DEPLOYING', timestamp: timestamp(), version:'v111'})
+CREATE (current)-[:IS_CURRENT_LIFECYCLE]-> (nextStage);
+
+//DEPLOYED
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+DELETE pointer
+CREATE (stage)-[:NEXT]->(nextStage:LifecycleStage {name:'DEPLOYED', timestamp: timestamp(), version:'v111'})
+CREATE (current)-[:IS_CURRENT_LIFECYCLE]-> (nextStage);
+
+//STARTING_ERROR
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+DELETE pointer
+CREATE (stage)-[:NEXT]->(nextStage:LifecycleStage {name:'STARTING_ERROR', timestamp: timestamp(), version:'v111'})
+CREATE (current)-[:IS_CURRENT_LIFECYCLE]-> (nextStage);
+```
 **Check it live: http://console.neo4j.org/r/6618ts**
-![Alt STARTING_ERROR](https://openmerchantaccount.com/img/starting_error.png)
 
 Then we deploy and run a new version (v112) successfully, which means we grow a new graph from the START_NODE node.
+```
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+DELETE pointer;
+
+MATCH (startline:LifecycleStage{name:'START_NODE'})
+MATCH (current:LifecyclePointer)
+CREATE (current)-[:IS_CURRENT_LIFECYCLE]-> (startline);
+
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+DELETE pointer
+CREATE (stage)-[:NEXT]->(nextStage:LifecycleStage {name:'DEPLOYING', timestamp: timestamp(), version:'v112'})
+CREATE (current)-[:IS_CURRENT_LIFECYCLE]-> (nextStage);
+
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+DELETE pointer
+CREATE (stage)-[:NEXT]->(nextStage:LifecycleStage {name:'DEPLOYED', timestamp: timestamp(), version:'v112'})
+CREATE (current)-[:IS_CURRENT_LIFECYCLE]-> (nextStage);
+
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+DELETE pointer
+CREATE (stage)-[:NEXT]->(nextStage:LifecycleStage {name:'RUNNING', timestamp: timestamp(), version:'v112'})
+CREATE (current)-[:IS_CURRENT_LIFECYCLE]-> (nextStage);
+```
 **Check it live: http://console.neo4j.org/?id=nkeg43**
-![Alt RUNNING](https://openmerchantaccount.com/img/RUNNING.png)
+
 
 A user(1) connects and interacts.
+```
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+CREATE (ue:UserEvent {name:'USER_SESSION', timestamp: timestamp(), sessionID:'id1'})-[:USER_OF]->(stage);
+MATCH (ue:UserEvent {sessionID:'id1'})
+CREATE (up:UserPointer{sessionID:'id1'})-[:IS_CURRENT_UE]->(ue);
+
+MATCH (up:UserPointer{sessionID:'id1'})-[last:IS_CURRENT_UE]->(ue:UserEvent)
+DELETE last
+CREATE (ue)-[:NEXT]->(ue2:UserEvent{name:'USER_SEARCH', timestamp: timestamp(), phrase:'searchphrase'})
+CREATE (up)-[:IS_CURRENT_UE]->(ue2);
+
+MATCH (up:UserPointer{sessionID:'id1'})-[last:IS_CURRENT_UE]->(ue:UserEvent)
+DELETE last
+CREATE (ue)-[:NEXT]->(ue2:UserEvent{name:'USER_PICK', timestamp: timestamp(), itemID:'item1', quantity:2})
+CREATE (up)-[:IS_CURRENT_UE]->(ue2);
+
+MATCH (up:UserPointer{sessionID:'id1'})-[last:IS_CURRENT_UE]->(ue:UserEvent)
+DELETE last
+CREATE (ue)-[:NEXT]->(ue2:UserEvent{name:'USER_PICK', timestamp: timestamp(), itemID:'item2', quantity:1})
+CREATE (up)-[:IS_CURRENT_UE]->(ue2);
+
+MATCH (up:UserPointer{sessionID:'id1'})-[last:IS_CURRENT_UE]->(ue:UserEvent)
+DELETE last
+CREATE (ue)-[:NEXT]->(ue2:UserEvent{name:'USER_PICK', timestamp: timestamp(), itemID:'item3', quantity:10})
+CREATE (up)-[:IS_CURRENT_UE]->(ue2);
+
+MATCH (up:UserPointer{sessionID:'id1'})-[last:IS_CURRENT_UE]->(ue:UserEvent)
+DELETE last
+CREATE (ue)-[:NEXT]->(ue2:UserEvent{name:'USER_CHECKOUT', timestamp: timestamp()})
+CREATE (up)-[:IS_CURRENT_UE]->(ue2);
+
+MATCH (up:UserPointer{sessionID:'id1'})-[last:IS_CURRENT_UE]->(ue:UserEvent)
+DELETE last
+CREATE (ue)-[:NEXT]->(ue2:UserEvent{name:'USER_PAY', timestamp: timestamp()})
+CREATE (up)-[:IS_CURRENT_UE]->(ue2);
+```
 **Check it live: http://console.neo4j.org/r/ylzlvy**
-![Alt User interacts](https://openmerchantaccount.com/img/USER_INTERACTS.png)
+
 
 Another user(2) connects and starts searching.
+```
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+CREATE (ue:UserEvent {name:'USER_SESSION', timestamp: timestamp(), sessionID:'id2'})-[:USER_OF]->(stage);
+
+MATCH (ue:UserEvent {sessionID:'id2'})
+CREATE (up:UserPointer{sessionID:'id2'})-[:IS_CURRENT_UE]->(ue);
+
+MATCH (up:UserPointer{sessionID:'id2'})-[last:IS_CURRENT_UE]->(ue:UserEvent)
+DELETE last
+CREATE (ue)-[:NEXT]->(ue2:UserEvent{name:'USER_SEARCH', timestamp: timestamp(), phrase:'searchphrase'})
+CREATE (up)-[:IS_CURRENT_UE]->(ue2);
+```
 **Check it live: http://console.neo4j.org/r/4wtim4**
-![Alt New user searches](https://openmerchantaccount.com/img/ID2_USER_SEARCH.png)
+
 
 We turn on a feature.
+```
+CREATE (fs:FeatureSwitch{name:'FEATURE_SWITCH', featureName:'feature1', value:true})
+CREATE (fp:FeaturePointer)-[:IS_CURRENT_FE]->(fs);
+
+MATCH (fsl:FeaturePointer)-[:IS_CURRENT_FE]->(fs:FeatureSwitch)
+MATCH (up:UserPointer)-[:IS_CURRENT_UE]->(ue:UserEvent)
+CREATE (fs)-[:WILL_IMPACT]->(ue);
+
+MATCH (fsl:FeaturePointer)-[:IS_CURRENT_FE]->(fs:FeatureSwitch)
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+CREATE (fs)-[:RELATES_TO]->(stage);
+```
 **Check it live: http://console.neo4j.org/r/vjuish**
-![Alt We turn on feature](https://openmerchantaccount.com/img/FEATURE_ON.png)
+
 
 User(1) searches for something then we turn off a feature.
+```
+CREATE (fs:FeatureSwitch{name:'FEATURE_SWITCH', featureName:'feature1', value:true})
+CREATE (fp:FeaturePointer)-[:IS_CURRENT_FE]->(fs);
+
+MATCH (fsl:FeaturePointer)-[:IS_CURRENT_FE]->(fs:FeatureSwitch)
+MATCH (up:UserPointer)-[:IS_CURRENT_UE]->(ue:UserEvent)
+CREATE (fs)-[:WILL_IMPACT]->(ue);
+
+MATCH (fsl:FeaturePointer)-[:IS_CURRENT_FE]->(fs:FeatureSwitch)
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+CREATE (fs)-[:RELATES_TO]->(stage);
+```
 **Check it live: http://console.neo4j.org/r/26iiqj**
-![Alt User1 search, feature turn off](https://openmerchantaccount.com/img/FEATURE_OFF.png)
 
 User(3) connects.
+```
+MATCH (fp:FeaturePointer)-[lastfe:IS_CURRENT_FE]->(fs)
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+CREATE (ue:UserEvent {name:'USER_SESSION', timestamp: timestamp(), sessionID:'id3'})-[:USER_OF]->(stage)
+CREATE (fs)-[:WILL_IMPACT]->(ue);
+MATCH (ue:UserEvent {sessionID:'id3'})
+CREATE (up:UserPointer{sessionID:'id3'})-[:IS_CURRENT_UE]->(ue);
+
+```
 **Check it live: http://console.neo4j.org/r/gqddar**
-![Alt User3 connects](https://openmerchantaccount.com/img/user3_connect.png)
+
 
 ## Let's review what we got
 
@@ -172,7 +299,7 @@ By following the connection between the deployment and the user or feature switc
 
 By checking the timestamps we can easily measure the latencies relevant to us.
 
-All this can be done using simple Cypher queries.
+**All this can be done using simple Cypher queries!**
 
 ## Next steps
 I don't really see people logging their system and user events into graphs, but I think it is definitely worth doing further experiments in this field as it can result great patterns and frameworks.
