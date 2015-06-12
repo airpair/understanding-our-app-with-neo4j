@@ -98,12 +98,34 @@ In real life we would use a real [Neo4j](http://neo4j.com/download/) instance, b
 
 To get our feet wet, let's see how we create a new lifecycle stage node using Cypher.
 ```
-MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:Lifec
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
 DELETE pointer
-CREATE (stage)-[:NEXT]->(nextStage:LifecycleStage {name:'STAGENAME', timestamp: '123', version:'v111'})
+CREATE (stage)-[:NEXT]->(nextStage:LifecycleStage {name:'DEPLOYING', timestamp: timestamp(), version:'v112'})
 CREATE (current)-[:IS_CURRENT_LIFECYCLE]-> (nextStage);
 ```
-We will use a pointer which points always to the latest stage so we have to repoint and add a new node to our event graph. These queries would be wrapped into transactions of course as Neo4j [supports them](http://neo4j.com/docs/stable/transactions.html) on node and relation level. 
+We first find to which LifecycleStage the LifecyclePointer points, then we delete the pointer, we create a new LifecycleStage and we point the previous to it, and in the end we point to the latest stage. 
+
+A user event does something similar, the difference is that every UserPointer contains the userID. If the user's visit is happening first time in this running instance, we have to connect the UserEvent to the RUNNING LifecycleStage. It looks like this:
+```
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+CREATE (ue:UserEvent {name:'USER_SESSION', timestamp: timestamp(), sessionID:'id1'})-[:USER_OF]->(stage);
+MATCH (ue:UserEvent {sessionID:'id1'})
+CREATE (up:UserPointer{sessionID:'id1'})-[:IS_CURRENT_UE]->(ue);
+```
+
+A FeatureSwitch uses the same pattern, but a new FeatureSwitch is connected to the RUNNING instance and to all the latest UserEvents.
+```
+CREATE (fs:FeatureSwitch{name:'FEATURE_SWITCH', featureName:'feature1', value:true})
+CREATE (fp:FeaturePointer)-[:IS_CURRENT_FE]->(fs);
+MATCH (fsl:FeaturePointer)-[:IS_CURRENT_FE]->(fs:FeatureSwitch)
+MATCH (up:UserPointer)-[:IS_CURRENT_UE]->(ue:UserEvent)
+CREATE (fs)-[:WILL_IMPACT]->(ue);
+MATCH (fsl:FeaturePointer)-[:IS_CURRENT_FE]->(fs:FeatureSwitch)
+MATCH (current:LifecyclePointer)-[pointer:IS_CURRENT_LIFECYCLE]->(stage:LifecycleStage)
+CREATE (fs)-[:RELATES_TO]->(stage);
+```
+
+These queries should be wrapped into transactions of course. Neo4j [supports them](http://neo4j.com/docs/stable/transactions.html) on node and relation level. 
 
 ### Now the story!
 
